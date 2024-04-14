@@ -26,7 +26,7 @@ func (s *SMTPClient) Send(email *model.Email) error {
 	auth := smtp.PlainAuth("", email.From, email.Credentials, s.Host)
 
 	// send email
-	err := smtp.SendMail(s.Host+":"+s.Port, auth, email.From, []string{email.To}, []byte(email.Message))
+	err := smtp.SendMail(s.Host+":"+s.Port, auth, email.From, []string{email.To}, []byte("Subject: "+email.Subject+"\r\n"+email.Message))
 	if err != nil {
 		fmt.Println(err)
 		return err

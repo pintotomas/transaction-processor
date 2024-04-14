@@ -70,7 +70,7 @@ type TransactionSummary struct {
 func (ts *TransactionSummary) String() string {
 	var builder strings.Builder
 
-	builder.WriteString(fmt.Sprintf("\r\nTotal balance is %.2f", ts.TotalBalance))
+	builder.WriteString(fmt.Sprintf("Total balance is %.2f", ts.TotalBalance))
 	builder.WriteString(fmt.Sprintf("\r\nAverage debit amount: %.2f", ts.AverageDebit))
 	builder.WriteString(fmt.Sprintf("\r\nAverage credit amount: %.2f\n", ts.AverageCredit))
 
