@@ -29,12 +29,19 @@ func main() {
 
 	client := mailing.NewSMTPClient("smtp.gmail.com", "587")
 
+	htmlContent, err := mailing.HTMLFormat(summary)
+
+	if err != nil {
+		log.Fatalf("Error formatting summary: %s", err)
+		return
+	}
+
 	err = client.Send(&model.Email{
 		Subject:     "Transactions Summary",
 		From:        "tomasstoritest@gmail.com",
 		Credentials: "pntu ntch dehp frtj",
 		To:          "tomasp834@gmail.com",
-		Message:     summary.String(),
+		Message:     htmlContent,
 	})
 	if err != nil {
 		log.Fatalf("Error sending email: %s", err)

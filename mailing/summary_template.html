@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Transactions Summary</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+<h1>Transactions Summary</h1>
+
+<!-- Summary Table -->
+<table>
+    <tr>
+        <th>Category</th>
+        <th>Amount</th>
+    </tr>
+    <tr>
+        <td>Total Balance</td>
+        <td>{{printf "%.2f" .TotalBalance}}</td>
+    </tr>
+    <tr>
+        <td>Average Debit Amount</td>
+        <td>{{printf "%.2f" .AverageDebit}}</td>
+    </tr>
+    <tr>
+        <td>Average Credit Amount</td>
+        <td>{{printf "%.2f" .AverageCredit}}</td>
+    </tr>
+</table>
+
+<!-- Transactions Per Month Table -->
+<h2>Transactions Per Month</h2>
+<table>
+    <tr>
+        <th>Month</th>
+        <th>Amount</th>
+    </tr>
+    {{ $monthOrder := MonthOrder }}
+    {{ range $month := $monthOrder }}
+    {{ $count := index $.TransactionsPerMonth $month }}
+    {{ if gt $count 0 }}
+    <tr>
+        <td>{{ $month }}</td>
+        <td>{{ $count }}</td>
+    </tr>
+    {{ end }}
+    {{ end }}
+</table>
+
+<!-- Logo -->
+<a href="https://www.storicard.com/"><img src="https://i.ibb.co/1RVhDTg/logo.png" alt="logo" style="margin-top: 20px;"></a>
+</body>
+</html>

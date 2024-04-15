@@ -1,8 +1,6 @@
 package model
 
 import (
-	"fmt"
-	"strings"
 	"time"
 
 	"github.com/go-playground/validator/v10"
@@ -65,27 +63,4 @@ type TransactionSummary struct {
 	AverageDebit         float64
 	AverageCredit        float64
 	TransactionsPerMonth map[string]int
-}
-
-func (ts *TransactionSummary) String() string {
-	var builder strings.Builder
-
-	builder.WriteString(fmt.Sprintf("Total balance is %.2f", ts.TotalBalance))
-	builder.WriteString(fmt.Sprintf("\r\nAverage debit amount: %.2f", ts.AverageDebit))
-	builder.WriteString(fmt.Sprintf("\r\nAverage credit amount: %.2f\n", ts.AverageCredit))
-
-	// Define the order of months
-	monthOrder := []string{
-		"January", "February", "March", "April", "May", "June",
-		"July", "August", "September", "October", "November", "December",
-	}
-
-	// Append month data in specified order
-	for _, month := range monthOrder {
-		if count, ok := ts.TransactionsPerMonth[month]; ok {
-			builder.WriteString(fmt.Sprintf("\r\nNumber of transactions in %s: %d", month, count))
-		}
-	}
-
-	return builder.String()
 }
