@@ -3,6 +3,7 @@ module transaction-processor
 go 1.19
 
 require (
+	github.com/aws/aws-lambda-go v1.46.0
 	github.com/go-playground/validator/v10 v10.19.0
 	github.com/stretchr/testify v1.8.4
 )
