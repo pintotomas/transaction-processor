@@ -1,8 +1,7 @@
 package main
 
 import (
-	"context"
-	"fmt"
+	"errors"
 	"github.com/aws/aws-lambda-go/lambda"
 	"log"
 	"os"
@@ -11,28 +10,24 @@ import (
 	"transaction-processor/model"
 )
 
-type Request struct {
-	Email string `json:"email"`
-}
-
-type Response struct {
-	Message string `json:"message"`
-}
-
 // ProcessAndSendEmail processes the file and sends the email
-func ProcessAndSendEmail(recipient string) error {
+func ProcessAndSendEmail(recipient string, file string) error {
 
-	dr, err := data.NewDataReader("local")
+	dr, err := data.NewDataReader(os.Getenv("ENVIRONMENT"))
 	if err != nil {
 		log.Fatalf("Error creating data reader: %s", err)
 		return err
 	}
-	err = dr.ReadData("csv/transactions1.csv")
+	dp, err := dr.ReadData(file)
 	if err != nil {
 		log.Fatalf("Error reading data: %s", err)
 		return err
 	}
-	transactions, err := dr.ParseData()
+	if !dp.Validate() {
+		log.Fatal("Failed to validate file")
+		return errors.New("invalid file")
+	}
+	transactions, err := dp.ParseData()
 	if err != nil {
 		log.Fatalf("Error parsing data: %s", err)
 		return err
@@ -64,32 +59,26 @@ func ProcessAndSendEmail(recipient string) error {
 	return nil
 }
 
-func HandleRequest(ctx context.Context, request Request) (Response, error) {
-
-	err := ProcessAndSendEmail(request.Email)
-	if err != nil {
-		return Response{Message: "Failed to send transaction summary details"}, err
-	}
-
-	message := fmt.Sprintf("Successfully sent transaction summary details to, %s!", request.Email)
-	return Response{Message: message}, nil
-}
-
 func main() {
 	// Read environment variables
 	env := os.Getenv("ENVIRONMENT")
-	if env == "local" {
+	switch env {
+	case "local":
 		// Read command-line arguments
 		args := os.Args[1:] // Skip the program name
 		var recipientEmail string
-		if len(args) == 1 {
+		var fileName string
+		if len(args) == 2 {
 			recipientEmail = args[0]
+			fileName = args[1]
 		} else {
-			log.Fatal("Please run with <recipient_email> argument")
+			log.Fatal("Please run with <recipient_email> <file_name> arguments")
 			return
 		}
-		ProcessAndSendEmail(recipientEmail)
-	} else if env == "production" {
+		ProcessAndSendEmail(recipientEmail, fileName)
+	case "production":
 		lambda.Start(HandleRequest)
+	default:
+		panic("Unknown environment. Please set ENVIRONMENT to 'local' or 'production'")
 	}
 }

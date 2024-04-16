@@ -1,7 +1,6 @@
 package mailing
 
 import (
-	"fmt"
 	"net/smtp"
 	"transaction-processor/model"
 )
@@ -28,7 +27,6 @@ func (s *SMTPClient) Send(email *model.Email) error {
 	// send email
 	err := smtp.SendMail(s.Host+":"+s.Port, auth, email.From, []string{email.To}, []byte("Subject: "+email.Subject+"\r\n"+"Content-Type: text/html; charset=utf-8\r\n"+email.Message))
 	if err != nil {
-		fmt.Println(err)
 		return err
 	}
 	return nil
