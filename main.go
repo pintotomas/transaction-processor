@@ -1,13 +1,35 @@
 package main
 
 import (
+	"fmt"
 	"log"
+	"os"
 	"transaction-processor/data"
 	"transaction-processor/mailing"
 	"transaction-processor/model"
 )
 
 func main() {
+
+	// Read environment variables
+	senderEmail := os.Getenv("SENDER_EMAIL")
+	emailPassword := os.Getenv("EMAIL_PASSWORD")
+	smtpHost := os.Getenv("SMTP_HOST")
+	smtpPort := os.Getenv("SMTP_PORT")
+	fmt.Println(senderEmail)
+	fmt.Println(emailPassword)
+	fmt.Println(smtpHost)
+	fmt.Println(smtpPort)
+
+	// Read command-line arguments
+	args := os.Args[1:] // Skip the program name
+	var recipientEmail string
+	if len(args) == 1 {
+		recipientEmail = args[0]
+	} else {
+		log.Fatal("Please run with <recipient_email> argument")
+		return
+	}
 
 	dr, err := data.NewDataReader("local")
 	if err != nil {
@@ -27,7 +49,7 @@ func main() {
 
 	summary := model.CalculateSummary(transactions)
 
-	client := mailing.NewSMTPClient("smtp.gmail.com", "587")
+	client := mailing.NewSMTPClient(smtpHost, smtpPort)
 
 	htmlContent, err := mailing.HTMLFormat(summary)
 
@@ -38,9 +60,9 @@ func main() {
 
 	err = client.Send(&model.Email{
 		Subject:     "Transactions Summary",
-		From:        "tomasstoritest@gmail.com",
-		Credentials: "pntu ntch dehp frtj",
-		To:          "tomasp834@gmail.com",
+		From:        senderEmail,
+		Credentials: emailPassword,
+		To:          recipientEmail,
 		Message:     htmlContent,
 	})
 	if err != nil {
