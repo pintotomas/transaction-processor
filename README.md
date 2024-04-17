@@ -52,7 +52,7 @@ SMTP_PORT=587
 AWS_S3_BUCKET=<your_S3_bucket_name>
 ```
 
-Ensure that your AWS Lambda function role has access to S3 to avoid errors.
+Ensure that your AWS Lambda function role (in the IAM service) has access to S3 to avoid errors.
 
 Also, make sure to upload the files to your s3 bucket
 
