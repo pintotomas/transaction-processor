@@ -8,6 +8,19 @@ Developed using Go version 1.19.1.
 
 ### Using Docker
 
+For running locally or with docker, ensure that the following environment variables are set:
+
+```bash
+ENVIRONMENT=local
+SENDER_EMAIL=...
+EMAIL_PASSWORD=...
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+LOCAL_FILE_PATH=csv/
+```
+
+I have provided a docker.env with those settings, but you can provide your own email and credentials, as well as choose a different SMTP host.
+
 Build the Docker image:
 ```
 docker build -t transaction-processor .
@@ -21,19 +34,6 @@ docker run --env-file docker.env transaction-processor <recipient_email@example.
 I have provided some files of my own for different scenarios, you can add any other file in the /csv folder 
 
 **Note:** Once the email is sent, it's advisable to check the spam folder.
-
-For running locally or with docker, ensure that the following environment variables are set:
-
-```bash
-ENVIRONMENT=local
-SENDER_EMAIL=...
-EMAIL_PASSWORD=...
-SMTP_HOST=smtp.gmail.com
-SMTP_PORT=587
-LOCAL_FILE_PATH=csv/
-```
-
-I have provided a docker.env with those settings, but you can provide your own email and credentials, as well as choose a different SMTP host.
 
 ### Production Deployment
 
