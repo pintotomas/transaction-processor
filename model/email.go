@@ -6,6 +6,7 @@ type Email struct {
 	From        string `validate:"required,min=1"`
 	Credentials string `validate:"required,min=1"`
 	To          string `validate:"required,min=1"`
+	Subject     string
 	Message     string `validate:"required,min=1"`
 }
 

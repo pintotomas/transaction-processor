@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"transaction-processor/data"
 	"transaction-processor/mailing"
@@ -28,11 +27,10 @@ func main() {
 
 	summary := model.CalculateSummary(transactions)
 
-	fmt.Println(summary.String())
-
 	client := mailing.NewSMTPClient("smtp.gmail.com", "587")
 
 	err = client.Send(&model.Email{
+		Subject:     "Transactions Summary",
 		From:        "tomasstoritest@gmail.com",
 		Credentials: "pntu ntch dehp frtj",
 		To:          "tomasp834@gmail.com",
