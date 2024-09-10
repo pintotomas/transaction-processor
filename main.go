@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"log"
 	"transaction-processor/data"
+	"transaction-processor/mailing"
+	"transaction-processor/model"
 )
 
 func main() {
@@ -23,35 +25,22 @@ func main() {
 		log.Fatalf("Error parsing data: %s", err)
 		return
 	}
-	// Print the transactions
-	for _, tx := range transactions {
-		fmt.Printf("ID: %d, Date: %s, Transaction: %.2f\n", tx.ID, tx.Date.Format("2006-01-02"), tx.Transaction)
-	}
-	//
-	//from := "tomasstoritest@gmail.com"
-	//password := "pntu ntch dehp frtj"
-	//
-	//// Receiver email address.
-	//to := []string{
-	//	"test@gmail.com",
-	//}
-	//
-	//// smtp server configuration.
-	//smtpHost := "smtp.gmail.com"
-	//smtpPort := "587"
-	//
-	//// Message.
-	//message := []byte("This is a test email message.")
-	//
-	//// Authentication.
-	//auth := smtp.PlainAuth("", from, password, smtpHost)
-	//
-	//// Sending email.
-	//err = smtp.SendMail(smtpHost+":"+smtpPort, auth, from, to, message)
-	//if err != nil {
-	//	fmt.Println(err)
-	//	return
-	//}
-	//fmt.Println("Email Sent Successfully!")
 
+	summary := model.CalculateSummary(transactions)
+
+	fmt.Println(summary.String())
+
+	client := mailing.NewSMTPClient("smtp.gmail.com", "587")
+
+	err = client.Send(&model.Email{
+		From:        "tomasstoritest@gmail.com",
+		Credentials: "pntu ntch dehp frtj",
+		To:          "tomasp834@gmail.com",
+		Message:     summary.String(),
+	})
+	if err != nil {
+		log.Fatalf("Error sending email: %s", err)
+		return
+	}
+	log.Println("Successfully sent email!")
 }
