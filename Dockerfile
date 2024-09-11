@@ -17,8 +17,16 @@ COPY . .
 RUN go build -o main .
 
 # Set environment variables from docker.env file
-ARG ENV_FILE_PATH=./docker.env
-ENV $(cat $ENV_FILE_PATH | xargs)
+ENV ENVIRONMENT=local
+ENV SENDER_EMAIL=tomasstoritest@gmail.com
+ENV EMAIL_PASSWORD="pntu ntch dehp frtj"
+ENV SMTP_HOST=smtp.gmail.com
+ENV SMTP_PORT=587
+ENV AWS_REGION=
+ENV AWS_S3_BUCKET=
+ENV LOCAL_FILE_PATH=csv/
+ENV AWS_ACCESS_KEY_ID=
+ENV AWS_SECRET_ACCESS_KEY=
 
 # Command to run the Go application with command-line argument
 ENTRYPOINT ["./main"]
